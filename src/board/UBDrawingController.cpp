@@ -109,13 +109,12 @@ void UBDrawingController::setStylusTool(int tool)
             mLatestDrawingTool = mStylusTool;
         }
 
-        if (tool == UBStylusTool::Pen || tool == UBStylusTool::Line)
-        {
+        if (tool == UBStylusTool::Pen || tool == UBStylusTool::Line) {
              emit lineWidthIndexChanged(UBSettings::settings()->penWidthIndex());
              emit colorIndexChanged(UBSettings::settings()->penColorIndex());
         }
-        else if (tool == UBStylusTool::Marker)
-        {
+
+        else if (tool == UBStylusTool::Marker) {
             emit lineWidthIndexChanged(UBSettings::settings()->markerWidthIndex());
             emit colorIndexChanged(UBSettings::settings()->markerColorIndex());
         }
@@ -403,3 +402,22 @@ void UBDrawingController::captureToolSelected(bool checked)
         setStylusTool(UBStylusTool::Capture);
 }
 
+
+
+void UBDrawingController::beginStroke(const QPointF& scenePos, const qreal& pressure)
+{
+    // Initialize mCurrentStroke
+    // Set its color based on currentToolColor();
+    // Add the current point to it, as its first point.
+
+}
+
+void UBDrawingController::newStrokePoint(const QPointF& scenePos, const qreal& pressure)
+{
+
+}
+
+void UBDrawingController::finishStroke(const QPointF& scenePos, const qreal& pressure)
+{
+
+}

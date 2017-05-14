@@ -34,8 +34,15 @@
 
 #include "core/UB.h"
 
+#include "domain/UBGraphicsStroke.h"
+
 class UBAbstractDrawRuler;
 
+/**
+ * @brief The UBDrawingController class handles all functions related to drawing
+ *
+ *
+ */
 class UBDrawingController : public QObject
 {
     Q_OBJECT;
@@ -66,13 +73,19 @@ class UBDrawingController : public QObject
 
         UBAbstractDrawRuler* mActiveRuler;
 
-        void setInDestopMode(bool mode){
-            mIsDesktopMode = mode;
-        }
+        void setInDestopMode(bool mode) { mIsDesktopMode = mode; }
+        bool isInDesktopMode(){ return mIsDesktopMode; }
 
-        bool isInDesktopMode(){
-            return mIsDesktopMode;
-        }
+        /* NEW STUFF */
+
+        void beginStroke(const QPointF& scenePos, const qreal& pressure);
+        void newStrokePoint(const QPointF& scenePos, const qreal& pressure);
+        void finishStroke(const QPointF& scenePos, const qreal& pressure);
+
+        bool smoothStrokes() { return UBSettings::settings()->boardInterpolatePenStrokes; }
+        bool simplifyStrokesAfterDrawing() {} // TODO: actually, check whether we're talking about marker or pen strokes to know what to return
+
+        /* --------- */
 
     public slots:
 
@@ -89,11 +102,15 @@ class UBDrawingController : public QObject
         void colorIndexChanged(int index);
 
     private:
+        static UBDrawingController* sDrawingController;
+
         UBStylusTool::Enum mStylusTool;
         UBStylusTool::Enum mLatestDrawingTool;
         bool mIsDesktopMode;
 
-        static UBDrawingController* sDrawingController;
+        /* NEW STUFF */
+        UBGraphicsStroke* mCurrentStroke;
+        /* --------- */
 
     private slots:
 

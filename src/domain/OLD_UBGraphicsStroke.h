@@ -24,51 +24,62 @@
  * along with OpenBoard. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
+
 #ifndef UBGRAPHICSSTROKE_H_
 #define UBGRAPHICSSTROKE_H_
 
 #include <QtGui>
-#include <QPainterPath>
 
 #include "core/UB.h"
-#include "UBItem.h"
+#include "frameworks/UBInterpolator.h"
 
-typedef QPair<QPointF, qreal> strokePoint;
 
-class UBGraphicsStroke : public QObject, public UBItem, public UBGraphicsItem
+
+class UBGraphicsPolygonItem;
+class UBGraphicsScene;
+
+class UBGraphicsStroke
 {
     friend class UBGraphicsPolygonItem;
 
     public:
-        UBGraphicsStroke();
-        UBGraphicsStroke(QList<QPolygonF> polygons);
-
+        UBGraphicsStroke(UBGraphicsScene* scene = NULL);
         virtual ~UBGraphicsStroke();
+
+        bool hasPressure();
+
+        QList<UBGraphicsPolygonItem*> polygons() const;
+
+        void remove(UBGraphicsPolygonItem* polygonItem); 
 
         UBGraphicsStroke *deepCopy();
 
         bool hasAlpha() const;
 
-        QList<QPair<QPointF, qreal> > addPoint(const QPointF& point, qreal width);
+        void clear();
+
+        QList<QPair<QPointF, qreal> > addPoint(const QPointF& point, qreal width, UBInterpolator::InterpolationMethod interpolationMethod = UBInterpolator::NoInterpolation);
 
         const QList<QPair<QPointF, qreal> >& points() { return mDrawnPoints; }
 
-        void simplify();
+        UBGraphicsStroke* simplify();
 
+    protected:
+        void addPolygon(UBGraphicsPolygonItem* pol);
 
     private:
-        QList<QPolygonF> mPolygons;
+
+        UBGraphicsScene * mScene;
+
+        QList<UBGraphicsPolygonItem*> mPolygons;
 
         /// Points that were drawn by the user (i.e, actually received through input device)
         QList<QPair<QPointF, qreal> > mReceivedPoints;
 
         /// All the points (including interpolated) that are used to draw the stroke
         QList<QPair<QPointF, qreal> > mDrawnPoints;
-
-        QPainterPath mPath;
-
-        QColor mColorOnDarkBackground;
-        QColor mColorOnLightBackground;
 
         qreal mAntiScaleRatio;
 };

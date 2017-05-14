@@ -438,13 +438,9 @@ public slots:
 
         QSet<QGraphicsItem*> mTools;
 
-        UBGraphicsPolygonItem *mArcPolygonItem;
-
         QSize mNominalSize;
 
         RenderingContext mRenderingContext;
-
-        UBGraphicsStroke* mCurrentStroke;
 
         int mItemCount;
 
@@ -459,11 +455,8 @@ public slots:
         UBMagnifier *magniferDisplayViewWidget;
 
         UBZLayerController *mZLayerController;
-        UBGraphicsPolygonItem* mpLastPolygon;
-        UBGraphicsPolygonItem* mTempPolygon;
 
         bool mDrawWithCompass;
-        UBGraphicsPolygonItem *mCurrentPolygon;
         UBSelectionFrame *mSelectionFrame;
 };
 
