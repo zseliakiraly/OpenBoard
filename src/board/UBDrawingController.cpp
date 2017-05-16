@@ -34,6 +34,7 @@
 
 #include "domain/UBGraphicsScene.h"
 #include "board/UBBoardController.h"
+#include "frameworks/UBGeometryUtils.h"
 
 #include "gui/UBMainWindow.h"
 #include "core/memcheck.h"
@@ -62,6 +63,7 @@ UBDrawingController::UBDrawingController(QObject * parent)
     , mStylusTool((UBStylusTool::Enum)-1)
     , mLatestDrawingTool((UBStylusTool::Enum)-1)
     , mIsDesktopMode(false)
+    , mCurrentStroke(nullptr)
 {
     connect(UBSettings::settings(), SIGNAL(colorContextChanged()), this, SIGNAL(colorPaletteChanged()));
 
@@ -404,20 +406,85 @@ void UBDrawingController::captureToolSelected(bool checked)
 
 
 
-void UBDrawingController::beginStroke(const QPointF& scenePos, const qreal& pressure)
+void UBDrawingController::beginStroke(UBGraphicsScene *scene, const QPointF& scenePos, const qreal& pressure)
 {
-    // Initialize mCurrentStroke
-    // Set its color based on currentToolColor();
-    // Add the current point to it, as its first point.
+    // check if using the line tool or the pen or the marker...
 
+    // Initialize mCurrentStroke
+    mCurrentStroke = new UBGraphicsStroke(); // parent?
+
+    // Set its color
+    mCurrentStroke->mColorOnDarkBackground = toolColor(true);
+    mCurrentStroke->mColorOnLightBackground = toolColor(false);
+
+
+    // Stroke thickness = current pen width, multiplied by min(0.2, pressure)
+    qreal width = currentToolWidth() * pressure;
+    width /= UBApplication::boardController->systemScaleFactor();
+    width /= UBApplication::boardController->currentZoom();
+
+    // Add the current point to it, as its first point.
+    mCurrentStroke->mReceivedPoints << strokePoint(scenePos, width);
+    mCurrentStroke->mDrawnPoints << strokePoint(scenePos, width);
+
+    // The stroke's path at this point is a circle, with a diameter depending on the pressure
+
+    // QPainterPath::addElipse(QPointF center, qreal radiusX, qreal radiusY)
+    mCurrentStroke->mPath.addEllipse(scenePos, width/2., width/2.);
+
+    scene->addItem(mCurrentStroke);
+    // For now
+    //mCurrentStroke->mPolygons = mCurrentStroke->mPath.toFillPolygons();
 }
 
 void UBDrawingController::newStrokePoint(const QPointF& scenePos, const qreal& pressure)
 {
+    qreal width = currentToolWidth() * pressure;
+    width /= UBApplication::boardController->systemScaleFactor();
+    width /= UBApplication::boardController->currentZoom();
 
+    strokePoint newPoint(scenePos, width);
+
+    // Are we interpolating?
+    if (!this->smoothStrokes()) {
+        // get the last drawn strokePoint
+        strokePoint previousPoint = mCurrentStroke->mReceivedPoints.last();
+
+        // Add the newly received point to the stroke
+
+        // draw a straight line to scenePos, using UBGeometryUtils::curveToPath (curveToPath with two points will just return a line)
+        QPainterPath path = UBGeometryUtils::curveToPath(QList<strokePoint>() << previousPoint << newPoint, true, true);
+        mCurrentStroke->mPath.addPath(path);
+
+        // Force update, otherwise the new subpath won't be painted
+        mCurrentStroke->update();
+
+        // For now
+       // mCurrentStroke->mPolygons = mCurrentStroke->mPath.toFillPolygons();
+        mCurrentStroke->mReceivedPoints << newPoint;
+        mCurrentStroke->mDrawnPoints << newPoint;
+    }
 }
 
-void UBDrawingController::finishStroke(const QPointF& scenePos, const qreal& pressure)
+void UBDrawingController::finishStroke()
 {
+    // Simplify the stroke
+    //mCurrentStroke->mPath = mCurrentStroke->mPath.simplified();
+    //mCurrentStroke->update();
 
+    mCurrentStroke = nullptr;
+    // other cleanup things?
+}
+
+
+bool UBDrawingController::smoothStrokes()
+{
+    //return UBSettings::settings()->boardInterpolatePenStrokes;
+    return false;
+}
+
+// TODO: actually, check whether we're talking about marker or pen strokes to know what to return
+bool UBDrawingController::simplifyStrokesAfterDrawing()
+{
+    return false;
 }

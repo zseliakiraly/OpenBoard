@@ -45,7 +45,6 @@
 #include "domain/UBGraphicsTextItem.h"
 #include "domain/UBGraphicsTextItemDelegate.h"
 #include "domain/UBGraphicsStroke.h"
-#include "domain/UBGraphicsStrokesGroup.h"
 #include "domain/UBGraphicsGroupContainerItem.h"
 #include "domain/UBGraphicsGroupContainerItemDelegate.h"
 #include "domain/UBItem.h"
@@ -359,8 +358,8 @@ UBGraphicsScene* UBSvgSubsetAdaptor::UBSvgSubsetReader::loadScene(UBDocumentProx
 
     mFileVersion = 40100; // default to 4.1.0
 
-    UBGraphicsStrokesGroup* strokesGroup = 0;
-    UBGraphicsStroke* currentStroke = 0;
+    //UBGraphicsStrokesGroup* strokesGroup = 0;
+    //UBGraphicsStroke* currentStroke = 0;
 
     while (!mXmlReader.atEnd())
     {
@@ -517,6 +516,7 @@ UBGraphicsScene* UBSvgSubsetAdaptor::UBSvgSubsetReader::loadScene(UBDocumentProx
 
                 }
             }
+            /*
             else if (mXmlReader.name() == "g")
             {
                 strokesGroup = new UBGraphicsStrokesGroup();
@@ -556,6 +556,8 @@ UBGraphicsScene* UBSvgSubsetAdaptor::UBSvgSubsetReader::loadScene(UBDocumentProx
                 if (!mStrokesList.contains(uuid_stripped))
                     mStrokesList.insert(uuid_stripped, strokesGroup);
             }
+            */
+           /*
             else if (mXmlReader.name() == "polygon" || mXmlReader.name() == "line")
             {
                 UBGraphicsPolygonItem* polygonItem = 0;
@@ -601,6 +603,8 @@ UBGraphicsScene* UBSvgSubsetAdaptor::UBSvgSubsetReader::loadScene(UBDocumentProx
                     group->addToGroup(polygonItem);
                 }
             }
+            */
+            /*
             else if (mXmlReader.name() == "polyline")
             {
                 QList<UBGraphicsPolygonItem*> polygonItems = polygonItemsFromPolylineSvg(mScene->isDarkBackground() ? Qt::white : Qt::black);
@@ -643,6 +647,7 @@ UBGraphicsScene* UBSvgSubsetAdaptor::UBSvgSubsetReader::loadScene(UBDocumentProx
                 }
 
             }
+            */
             else if (mXmlReader.name() == "image")
             {
                 QStringRef imageHref = mXmlReader.attributes().value(nsXLink, "href");
@@ -934,8 +939,8 @@ UBGraphicsScene* UBSvgSubsetAdaptor::UBSvgSubsetReader::loadScene(UBDocumentProx
                 mGroupHasInfo = false;
                 mGroupDarkBackgroundColor = QColor();
                 mGroupLightBackgroundColor = QColor();
-                strokesGroup = NULL;
-                currentStroke = NULL;
+                //strokesGroup = NULL;
+                //currentStroke = NULL;
             }
         }
     }
@@ -946,12 +951,14 @@ UBGraphicsScene* UBSvgSubsetAdaptor::UBSvgSubsetReader::loadScene(UBDocumentProx
         qWarning() << "error parsing file " << mXmlReader.errorString();
     }
 
-    qDebug() << "Number of detected strokes: " << mStrokesList.count();
+//    qDebug() << "Number of detected strokes: " << mStrokesList.count();
+    /*
     QHashIterator<QString, UBGraphicsStrokesGroup*> iterator(mStrokesList);
     while (iterator.hasNext()) {
         iterator.next();
         mScene->addItem(iterator.value());
     }
+    */
 
     if (mScene) {
         mScene->setModified(saveSceneAfterLoading);
@@ -972,8 +979,10 @@ UBGraphicsGroupContainerItem* UBSvgSubsetAdaptor::UBSvgSubsetReader::readGroup()
     QString id = mXmlReader.attributes().value(aId).toString();
     id = id.mid(1,id.length()-2);
     bool shouldSkipSubElements = false;
+    /*
     if(mStrokesList.contains(id))
         shouldSkipSubElements = true;
+        */
 
     mXmlReader.readNext();
     while (!mXmlReader.atEnd())
@@ -1059,8 +1068,10 @@ QGraphicsItem *UBSvgSubsetAdaptor::UBSvgSubsetReader::readElementFromGroup()
     QString uuid = id.right(QUuid().toString().size());
     result = mScene->itemForUuid(QUuid(uuid));
 
+    /*
     if(!result)
         result = mStrokesList.take(uuid.replace("}","").replace("{",""));
+        */
 
     mXmlReader.skipCurrentElement();
     mXmlReader.readNext();
@@ -1166,7 +1177,7 @@ bool UBSvgSubsetAdaptor::UBSvgSubsetWriter::persistScene(UBDocumentProxy* proxy,
 
     qSort(items.begin(), items.end(), itemZIndexComp);
 
-    UBGraphicsStroke *openStroke = 0;
+    //UBGraphicsStroke *openStroke = 0;
 
     bool groupHoldsInfo = false;
 
@@ -1175,6 +1186,8 @@ bool UBSvgSubsetAdaptor::UBSvgSubsetWriter::persistScene(UBDocumentProxy* proxy,
         QGraphicsItem *item = items.takeFirst();
 
         // Is the item a polygon?
+
+        /*
         UBGraphicsPolygonItem *polygonItem = qgraphicsitem_cast<UBGraphicsPolygonItem*> (item);
         if (polygonItem && polygonItem->isVisible())
         {
@@ -1253,12 +1266,14 @@ bool UBSvgSubsetAdaptor::UBSvgSubsetWriter::persistScene(UBDocumentProxy* proxy,
             continue;
         }
 
+
         if (openStroke)
         {
             mXmlWriter.writeEndElement(); //g
             groupHoldsInfo = false;
             openStroke = 0;
         }
+        */
 
         // Is the item a picture?
         UBGraphicsPixmapItem *pixmapItem = qgraphicsitem_cast<UBGraphicsPixmapItem*> (item);
@@ -1379,12 +1394,15 @@ bool UBSvgSubsetAdaptor::UBSvgSubsetWriter::persistScene(UBDocumentProxy* proxy,
         }
     }
 
+
+    /*
     if (openStroke)
     {
         mXmlWriter.writeEndElement();
         groupHoldsInfo = false;
         openStroke = 0;
     }
+    */
 
     //writing group data
     if (groupRoot.hasChildNodes()) {
@@ -1497,6 +1515,7 @@ void UBSvgSubsetAdaptor::UBSvgSubsetWriter::polygonItemToSvgLine(UBGraphicsPolyg
 
 void UBSvgSubsetAdaptor::UBSvgSubsetWriter::strokeToSvgPolyline(UBGraphicsStroke* stroke, bool groupHoldsInfo)
 {
+    /*
     QList<UBGraphicsPolygonItem*> pols = stroke->polygons();
 
     if (pols.length() > 0)
@@ -1546,11 +1565,13 @@ void UBSvgSubsetAdaptor::UBSvgSubsetWriter::strokeToSvgPolyline(UBGraphicsStroke
 
         mXmlWriter.writeEndElement();
     }
+    */
 }
 
 
 void UBSvgSubsetAdaptor::UBSvgSubsetWriter::strokeToSvgPolygon(UBGraphicsStroke* stroke, bool groupHoldsInfo)
 {
+    /*
     QList<UBGraphicsPolygonItem*> pis = stroke->polygons();
 
     if (pis.length() > 0)
@@ -1568,6 +1589,7 @@ void UBSvgSubsetAdaptor::UBSvgSubsetWriter::strokeToSvgPolygon(UBGraphicsStroke*
 
         polygonItemToSvgPolygon(clone, groupHoldsInfo);
     }
+    */
 }
 
 void UBSvgSubsetAdaptor::UBSvgSubsetWriter::polygonItemToSvgPolygon(UBGraphicsPolygonItem* polygonItem, bool groupHoldsInfo)
@@ -1618,9 +1640,9 @@ void UBSvgSubsetAdaptor::UBSvgSubsetWriter::polygonItemToSvgPolygon(UBGraphicsPo
         }
 
         mXmlWriter.writeAttribute(UBSettings::uniboardDocumentNamespaceUri, "uuid", UBStringUtils::toCanonicalUuid(polygonItem->uuid()));
-        UBGraphicsStrokesGroup* sg = polygonItem->strokesGroup();
-        if (sg)
-            mXmlWriter.writeAttribute(UBSettings::uniboardDocumentNamespaceUri, "parent", UBStringUtils::toCanonicalUuid(sg->uuid()));
+        //UBGraphicsStrokesGroup* sg = polygonItem->strokesGroup();
+        //if (sg)
+        //    mXmlWriter.writeAttribute(UBSettings::uniboardDocumentNamespaceUri, "parent", UBStringUtils::toCanonicalUuid(sg->uuid()));
 
         mXmlWriter.writeEndElement();
     }

@@ -78,12 +78,12 @@ class UBDrawingController : public QObject
 
         /* NEW STUFF */
 
-        void beginStroke(const QPointF& scenePos, const qreal& pressure);
+        void beginStroke(UBGraphicsScene* scene, const QPointF& scenePos, const qreal& pressure);
         void newStrokePoint(const QPointF& scenePos, const qreal& pressure);
-        void finishStroke(const QPointF& scenePos, const qreal& pressure);
+        void finishStroke();
 
-        bool smoothStrokes() { return UBSettings::settings()->boardInterpolatePenStrokes; }
-        bool simplifyStrokesAfterDrawing() {} // TODO: actually, check whether we're talking about marker or pen strokes to know what to return
+        bool smoothStrokes();
+        bool simplifyStrokesAfterDrawing(); // TODO: actually, check whether we're talking about marker or pen strokes to know what to return
 
         /* --------- */
 

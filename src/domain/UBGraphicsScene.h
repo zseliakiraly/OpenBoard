@@ -337,7 +337,7 @@ class UBGraphicsScene: public UBCoreGraphicsScene, public UBItem
 public slots:
         void updateSelectionFrame();
         void updateSelectionFrameWrapper(int);
-        void initStroke();
+        //void initStroke();
         void hideTool();
 
         void setBackground(bool pIsDark, UBPageBackground pBackground);

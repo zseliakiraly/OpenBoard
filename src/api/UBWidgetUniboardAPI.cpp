@@ -245,6 +245,7 @@ void UBWidgetUniboardAPI::moveTo(const qreal x, const qreal y)
 
 void UBWidgetUniboardAPI::drawLineTo(const qreal x, const qreal y, const qreal pWidth)
 {
+    /*
     if (qIsNaN(x) || qIsNaN(y) || qIsNaN(pWidth)
         || qIsInf(x) || qIsInf(y) || qIsInf(pWidth))
         return;
@@ -252,17 +253,20 @@ void UBWidgetUniboardAPI::drawLineTo(const qreal x, const qreal y, const qreal p
     if (mScene)
     mScene->drawLineTo(QPointF(x, y), pWidth, 
         UBDrawingController::drawingController()->stylusTool() == UBStylusTool::Line);
+        */
 }
 
 
 void UBWidgetUniboardAPI::eraseLineTo(const qreal x, const qreal y, const qreal pWidth)
 {
+    /*
     if (qIsNaN(x) || qIsNaN(y) || qIsNaN(pWidth)
        || qIsInf(x) || qIsInf(y) || qIsInf(pWidth))
        return;
 
     if (mScene)
     mScene->eraseLineTo(QPointF(x, y), pWidth);
+    */
 }
 
 

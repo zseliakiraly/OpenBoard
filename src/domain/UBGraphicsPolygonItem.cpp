@@ -42,7 +42,7 @@ UBGraphicsPolygonItem::UBGraphicsPolygonItem (QGraphicsItem * parent)
     , mOriginalWidth(-1)
     , mIsNominalLine(false)
     , mStroke(0)
-    , mpGroup(NULL)
+    //, mpGroup(NULL)
 {
     // NOOP
     initialize();
@@ -54,7 +54,7 @@ UBGraphicsPolygonItem::UBGraphicsPolygonItem (const QPolygonF & polygon, QGraphi
     , mOriginalWidth(-1)
     , mIsNominalLine(false)
     , mStroke(0)
-    , mpGroup(NULL)
+    //, mpGroup(NULL)
 {
     // NOOP
     initialize();
@@ -67,7 +67,7 @@ UBGraphicsPolygonItem::UBGraphicsPolygonItem (const QLineF& pLine, qreal pWidth)
     , mOriginalWidth(pWidth)
     , mIsNominalLine(true)
     , mStroke(0)
-    , mpGroup(NULL)
+    //, mpGroup(NULL)
 {
     // NOOP
     initialize();
@@ -79,7 +79,7 @@ UBGraphicsPolygonItem::UBGraphicsPolygonItem (const QLineF& pLine, qreal pStartW
     , mOriginalWidth(pEndWidth)
     , mIsNominalLine(true)
     , mStroke(0)
-    , mpGroup(NULL)
+    //, mpGroup(NULL)
 {
     // NOOP
     initialize();
@@ -100,6 +100,7 @@ void UBGraphicsPolygonItem::setUuid(const QUuid &pUuid)
 
 void UBGraphicsPolygonItem::clearStroke()
 {
+    /*
     if (mStroke!=NULL)
     {
         mStroke->remove(this);
@@ -107,6 +108,7 @@ void UBGraphicsPolygonItem::clearStroke()
             delete mStroke;
         mStroke = NULL;
     }
+    */
 }
 
 UBGraphicsPolygonItem::~UBGraphicsPolygonItem()
@@ -114,6 +116,7 @@ UBGraphicsPolygonItem::~UBGraphicsPolygonItem()
     clearStroke();
 }
 
+/*
 void UBGraphicsPolygonItem::setStrokesGroup(UBGraphicsStrokesGroup *group)
 {
     mpGroup = group;
@@ -133,6 +136,7 @@ UBGraphicsStroke* UBGraphicsPolygonItem::stroke() const
 {
     return mStroke;
 }
+*/
 
 
 void UBGraphicsPolygonItem::setColor(const QColor& pColor)

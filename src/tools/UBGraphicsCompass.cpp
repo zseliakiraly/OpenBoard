@@ -224,11 +224,13 @@ void UBGraphicsCompass::mousePressEvent(QGraphicsSceneMouseEvent *event)
         mDrawing = event->pos().x() > rect().right() - sPencilLength - sPencilBaseLength;
         if (mDrawing)
         {
+            /*
             qDebug() << "drawing";
             mSpanAngleInDegrees = 0;
             mSceneArcStartPoint = mapToScene(pencilPosition());
             scene()->initStroke();
             scene()->moveTo(mSceneArcStartPoint);
+            */
         }
         QGraphicsRectItem::mousePressEvent(event);
     }
@@ -554,7 +556,7 @@ void UBGraphicsCompass::drawArc()
     if (!mDrewCircle || (-360 != arcSpanAngle && 360 != arcSpanAngle))
     {
         mDrewCircle = (-360 == arcSpanAngle || 360 == arcSpanAngle);
-        scene()->drawArcTo(sceneNeedlePosition, arcSpanAngle);
+        //scene()->drawArcTo(sceneNeedlePosition, arcSpanAngle);
     }
 }
 
@@ -580,6 +582,7 @@ void UBGraphicsCompass::updateDrawCursor()
 
 void UBGraphicsCompass::paintCenterCross()
 {
+    /*
     QPointF needleCrossCenter = mapToScene(needlePosition());
     scene()->moveTo(QPointF(needleCrossCenter.x() - 5, needleCrossCenter.y()));
     scene()->drawLineTo(QPointF(needleCrossCenter.x() + 5, needleCrossCenter.y()), 1,
@@ -587,6 +590,7 @@ void UBGraphicsCompass::paintCenterCross()
     scene()->moveTo(QPointF(needleCrossCenter.x(), needleCrossCenter.y() - 5));
     scene()->drawLineTo(QPointF(needleCrossCenter.x(), needleCrossCenter.y() + 5), 1,
         UBDrawingController::drawingController()->stylusTool() == UBStylusTool::Line);
+        */
 }
 
 QPointF UBGraphicsCompass::needlePosition() const

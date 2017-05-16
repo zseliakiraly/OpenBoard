@@ -49,6 +49,7 @@ class UBGeometryUtils
                 const qreal& pStartWidth, const qreal& pEndWidth);
         static QPolygonF curveToPolygon(const QList<QPointF>& points, qreal startWidth, qreal endWidth);
         static QPolygonF curveToPolygon(const QList<QPair<QPointF, qreal> >& points, bool roundStart, bool roundEnd);
+        static QPainterPath curveToPath(const QList<QPair<QPointF, qreal> >& points, bool roundStart, bool roundEnd);
 
         static QPointF pointConstrainedInRect(QPointF point, QRectF rect);
         static QPoint pointConstrainedInRect(QPoint point, QRect rect);

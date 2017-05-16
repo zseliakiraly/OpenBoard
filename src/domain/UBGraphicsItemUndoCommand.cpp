@@ -101,6 +101,7 @@ void UBGraphicsItemUndoCommand::undo()
 
         QTransform t;
         bool bApplyTransform = false;
+        /*
         UBGraphicsPolygonItem *polygonItem = qgraphicsitem_cast<UBGraphicsPolygonItem*>(item);
         if (polygonItem){
             if (polygonItem->strokesGroup()
@@ -115,10 +116,13 @@ void UBGraphicsItemUndoCommand::undo()
 
             polygonItem->strokesGroup()->removeFromGroup(polygonItem);
         }
+        */
         mScene->removeItem(item);
 
+        /*
         if (bApplyTransform)
             polygonItem->setTransform(t);
+            */
 
     }
 
@@ -135,6 +139,7 @@ void UBGraphicsItemUndoCommand::undo()
 
             if (UBGraphicsPolygonItem::Type == item->type())
             {
+                /*
                 UBGraphicsPolygonItem *polygonItem = qgraphicsitem_cast<UBGraphicsPolygonItem*>(item);
                 if (polygonItem)
                 {
@@ -142,6 +147,7 @@ void UBGraphicsItemUndoCommand::undo()
                     mScene->removeItemFromDeletion(polygonItem);
                     polygonItem->strokesGroup()->addToGroup(polygonItem);
                 }
+                */
             }
 
             UBApplication::boardController->freezeW3CWidget(item, false);
@@ -233,6 +239,7 @@ void UBGraphicsItemUndoCommand::redo()
             bool bApplyTransform = false;
             UBGraphicsPolygonItem *polygonItem = qgraphicsitem_cast<UBGraphicsPolygonItem*>(item);
 
+            /*
             if (polygonItem){
                 if(polygonItem->strokesGroup()
                         && polygonItem->strokesGroup()->parentItem()
@@ -246,6 +253,7 @@ void UBGraphicsItemUndoCommand::redo()
 
                 polygonItem->strokesGroup()->removeFromGroup(polygonItem);
             }
+            */
             mScene->removeItem(item);
 
             if (bApplyTransform)
@@ -272,7 +280,7 @@ void UBGraphicsItemUndoCommand::redo()
                 {
                     mScene->removeItem(polygonItem);
                     mScene->removeItemFromDeletion(polygonItem);
-                    polygonItem->strokesGroup()->addToGroup(polygonItem);
+                    //polygonItem->strokesGroup()->addToGroup(polygonItem);
                 }
             }
         }

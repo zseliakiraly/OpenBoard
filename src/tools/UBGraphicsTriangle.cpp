@@ -942,6 +942,7 @@ void UBGraphicsTriangle::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 }
 void UBGraphicsTriangle::StartLine(const QPointF &scenePos, qreal width)
 {
+    /*
     Q_UNUSED(width);
     QPointF itemPos = mapFromScene(scenePos);
     mStrokeWidth = UBDrawingController::drawingController()->currentToolWidth();
@@ -964,10 +965,12 @@ void UBGraphicsTriangle::StartLine(const QPointF &scenePos, qreal width)
 
     scene()->moveTo(itemPos);
     scene()->drawLineTo(itemPos, mStrokeWidth, true);
+    */
 }
 
 void UBGraphicsTriangle::DrawLine(const QPointF &scenePos, qreal width)
 {
+    /*
     Q_UNUSED(width);
     QPointF itemPos = mapFromScene(scenePos);
 
@@ -990,6 +993,7 @@ void UBGraphicsTriangle::DrawLine(const QPointF &scenePos, qreal width)
     // We have to use "pointed" line for marker tool
     scene()->drawLineTo(itemPos, mStrokeWidth,
             UBDrawingController::drawingController()->stylusTool() != UBStylusTool::Marker);
+            */
 }
 
 /**

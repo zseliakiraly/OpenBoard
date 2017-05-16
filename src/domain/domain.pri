@@ -16,7 +16,6 @@ HEADERS += src/domain/UBGraphicsScene.h \
     src/domain/UBGraphicsMediaItem.h \
     src/domain/UBGraphicsGroupContainerItem.h \
     src/domain/UBGraphicsGroupContainerItemDelegate.h \
-    src/domain/UBGraphicsStrokesGroup.h \
     src/domain/UBGraphicsItemGroupUndoCommand.h \
     src/domain/UBGraphicsItemDelegate.h \
     src/domain/UBGraphicsTextItemDelegate.h \
@@ -45,7 +44,6 @@ SOURCES += src/domain/UBGraphicsScene.cpp \
     src/domain/UBGraphicsMediaItem.cpp \
     src/domain/UBGraphicsGroupContainerItem.cpp \
     src/domain/UBGraphicsGroupContainerItemDelegate.cpp \
-    src/domain/UBGraphicsStrokesGroup.cpp \
     src/domain/UBGraphicsItemGroupUndoCommand.cpp \
     src/domain/UBGraphicsItemDelegate.cpp \
     src/domain/UBGraphicsTextItemDelegate.cpp \

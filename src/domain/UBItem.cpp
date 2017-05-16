@@ -35,7 +35,7 @@
 #include "domain/UBGraphicsTextItem.h"
 #include "domain/UBGraphicsSvgItem.h"
 #include "domain/UBGraphicsMediaItem.h"
-#include "domain/UBGraphicsStrokesGroup.h"
+#include "domain/UBGraphicsStroke.h"
 #include "domain/UBGraphicsGroupContainerItem.h"
 #include "domain/UBGraphicsWidgetItem.h"
 #include "domain/UBGraphicsScene.h"
@@ -123,8 +123,8 @@ UBGraphicsItemDelegate *UBGraphicsItem::Delegate(QGraphicsItem *pItem)
     case UBGraphicsAudioItem::Type:
         result = (static_cast<UBGraphicsMediaItem*>(pItem))->Delegate();
         break;
-    case UBGraphicsStrokesGroup::Type :
-        result = (static_cast<UBGraphicsStrokesGroup*>(pItem))->Delegate();
+    case UBGraphicsStroke::Type :
+        result = (static_cast<UBGraphicsStroke*>(pItem))->Delegate();
         break;
     case UBGraphicsGroupContainerItem::Type :
         result = (static_cast<UBGraphicsGroupContainerItem*>(pItem))->Delegate();

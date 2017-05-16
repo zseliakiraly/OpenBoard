@@ -64,7 +64,7 @@
 #include "domain/UBGraphicsTextItem.h"
 #include "domain/UBPageSizeUndoCommand.h"
 #include "domain/UBGraphicsGroupContainerItem.h"
-#include "domain/UBGraphicsStrokesGroup.h"
+//#include "domain/UBGraphicsStrokesGroup.h"
 #include "domain/UBItem.h"
 #include "board/UBFeaturesController.h"
 

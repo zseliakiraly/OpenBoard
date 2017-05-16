@@ -244,6 +244,7 @@ QPolygonF UBGeometryUtils::arcToPolygon(const QLineF& startRadius, qreal spanAng
     return painterPath.toFillPolygon();
 }
 
+
 /**
  * @brief Build and return a polygon from a list of points (at least 2), and start and end widths.
  *
@@ -283,12 +284,21 @@ QPolygonF UBGeometryUtils::curveToPolygon(const QList<QPointF>& points, qreal st
  */
 QPolygonF UBGeometryUtils::curveToPolygon(const QList<QPair<QPointF, qreal> >& points, bool roundStart, bool roundEnd)
 {
+    return curveToPath(points, roundStart, roundEnd).toFillPolygon();
+
+}
+
+QPainterPath UBGeometryUtils::curveToPath(const QList<QPair<QPointF, qreal> >& points, bool roundStart, bool roundEnd)
+{
     int n_points = points.size();
 
     if (n_points == 0)
-        return QPolygonF();
-    if (n_points == 1)
-        return lineToPolygon(points.first().first, points.first().first, points.first().second, points.first().second);
+        return QPainterPath();
+    if (n_points == 1) {
+        QPainterPath path;
+        path.addEllipse(points.first().first, points.first().second/2., points.first().second/2.);
+        return path;
+    }
 
     qreal startWidth = points.first().second;
     qreal endWidth = points.last().second;
@@ -380,7 +390,7 @@ QPolygonF UBGeometryUtils::curveToPolygon(const QList<QPair<QPointF, qreal> >& p
 
     //path.closeSubpath();
 
-    return path.toFillPolygon();
+    return path;
 }
 
 QPointF UBGeometryUtils::pointConstrainedInRect(QPointF point, QRectF rect)

@@ -35,26 +35,45 @@
 
 typedef QPair<QPointF, qreal> strokePoint;
 
-class UBGraphicsStroke : public QObject, public UBItem, public UBGraphicsItem
+class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, public UBGraphicsItem
 {
-    friend class UBGraphicsPolygonItem;
+    Q_OBJECT
+
+    friend class UBDrawingController; // for now. but maybe drawingController should just interface via public functions
 
     public:
-        UBGraphicsStroke();
-        UBGraphicsStroke(QList<QPolygonF> polygons);
-
+        UBGraphicsStroke(QGraphicsItem* parent = NULL);
+        UBGraphicsStroke(QList<QPolygonF> polygons, QGraphicsItem* parent = NULL);
         virtual ~UBGraphicsStroke();
 
-        UBGraphicsStroke *deepCopy();
+        enum { Type = UBGraphicsItemType::StrokeItemType };
+        virtual int type() const { return Type; }
+
+        virtual UBItem* deepCopy() const;
+        virtual void copyItemParameters(UBItem *copy) const;
+
+        void setUuid(const QUuid &pUuid);
 
         bool hasAlpha() const;
 
-        QList<QPair<QPointF, qreal> > addPoint(const QPointF& point, qreal width);
+        //QList<QPair<QPointF, qreal> > addPoint(const QPointF& point, qreal width);
 
         const QList<QPair<QPointF, qreal> >& points() { return mDrawnPoints; }
 
         void simplify();
+        bool hasPressure();
 
+        QRectF boundingRect() const;
+
+    protected:
+        QPainterPath shape () const;
+
+        /*
+        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        */
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     private:
         QList<QPolygonF> mPolygons;
@@ -65,12 +84,10 @@ class UBGraphicsStroke : public QObject, public UBItem, public UBGraphicsItem
         /// All the points (including interpolated) that are used to draw the stroke
         QList<QPair<QPointF, qreal> > mDrawnPoints;
 
-        QPainterPath mPath;
+        QPainterPath mPath; // would it make sense to instead have UBGraphicsStroke inherit QPainterPath?
 
         QColor mColorOnDarkBackground;
         QColor mColorOnLightBackground;
-
-        qreal mAntiScaleRatio;
 };
 
 #endif /* UBGRAPHICSSTROKE_H_ */

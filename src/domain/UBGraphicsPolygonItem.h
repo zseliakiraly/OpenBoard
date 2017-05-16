@@ -32,7 +32,7 @@
 
 #include "core/UB.h"
 #include "UBItem.h"
-#include "UBGraphicsStrokesGroup.h"
+//#include "UBGraphicsStrokesGroup.h"
 #include "domain/UBGraphicsGroupContainerItem.h"
 
 class UBItem;
@@ -55,8 +55,8 @@ class UBGraphicsPolygonItem : public QGraphicsPolygonItem, public UBItem
 
         void setUuid(const QUuid &pUuid);
 
-        void setStrokesGroup(UBGraphicsStrokesGroup* group);
-        UBGraphicsStrokesGroup* strokesGroup() const{return mpGroup;}
+        //void setStrokesGroup(UBGraphicsStrokesGroup* group);
+        //UBGraphicsStrokesGroup* strokesGroup() const{return mpGroup;}
         void setColor(const QColor& color);
 
         QColor color() const;
@@ -129,8 +129,8 @@ class UBGraphicsPolygonItem : public QGraphicsPolygonItem, public UBItem
             mColorOnLightBackground = pColorOnLightBackground;
         }
 
-        void setStroke(UBGraphicsStroke* stroke);
-        UBGraphicsStroke* stroke() const;
+        //void setStroke(UBGraphicsStroke* stroke);
+        //UBGraphicsStroke* stroke() const;
 
     protected:
         void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
@@ -150,7 +150,7 @@ class UBGraphicsPolygonItem : public QGraphicsPolygonItem, public UBItem
         QColor mColorOnLightBackground;
 
         UBGraphicsStroke* mStroke;
-        UBGraphicsStrokesGroup* mpGroup;
+        //UBGraphicsStrokesGroup* mpGroup;
 
 };
 

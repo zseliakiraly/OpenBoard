@@ -71,7 +71,7 @@
 #include "domain/UBGraphicsMediaItem.h"
 #include "domain/UBGraphicsSvgItem.h"
 #include "domain/UBGraphicsGroupContainerItem.h"
-#include "domain/UBGraphicsStrokesGroup.h"
+//#include "domain/UBGraphicsStrokesGroup.h"
 #include "domain/UBGraphicsItemDelegate.h"
 
 #include "document/UBDocumentProxy.h"
@@ -678,7 +678,7 @@ bool UBBoardView::itemShouldBeMoved(QGraphicsItem *item)
     case UBGraphicsVideoItem::Type:
     case UBGraphicsAudioItem::Type:
         return true;
-    case UBGraphicsStrokesGroup::Type:
+    case UBGraphicsStroke::Type:
         return false;
     case UBGraphicsTextItem::Type:
         return !item->isSelected();
@@ -702,8 +702,10 @@ QGraphicsItem* UBBoardView::determineItemToPress(QGraphicsItem *item)
             return item->parentItem();
 
         // items like polygons placed in two groups nested, so we need to recursive call.
+        /*
         if(item->parentItem() && UBGraphicsStrokesGroup::Type == item->parentItem()->type())
             return determineItemToPress(item->parentItem());
+            */
     }
 
     return item;
@@ -727,9 +729,11 @@ QGraphicsItem* UBBoardView::determineItemToMove(QGraphicsItem *item)
             if (UBStylusTool::Play == currentTool && item->parentItem()->isSelected())
                 return item->parentItem();
 
+            /*
             // groups should should be moved instead of strokes groups
             if (UBGraphicsStrokesGroup::Type == item->type())
                 return item->parentItem();
+                */
 
             // selected groups should be moved by moving any element
             if (item->parentItem()->isSelected())
@@ -742,8 +746,10 @@ QGraphicsItem* UBBoardView::determineItemToMove(QGraphicsItem *item)
         }
 
         // items like polygons placed in two groups nested, so we need to recursive call.
+        /*
         if(item->parentItem() && UBGraphicsStrokesGroup::Type == item->parentItem()->type())
             return determineItemToMove(item->parentItem());
+            */
     }
 
     return item;
@@ -866,7 +872,7 @@ void UBBoardView::moveRubberedItems(QPointF movingVector)
                 || item->type() == UBGraphicsAudioItem::Type
                 || item->type() == UBGraphicsSvgItem::Type
                 || item->type() == UBGraphicsTextItem::Type
-                || item->type() == UBGraphicsStrokesGroup::Type
+                || item->type() == UBGraphicsStroke::Type
                 || item->type() == UBGraphicsGroupContainerItem::Type)
         {
             item->setPos(item->pos()+movingVector);
@@ -1180,7 +1186,7 @@ void UBBoardView::mouseMoveEvent (QMouseEvent *event)
                             || item->type() == UBGraphicsAudioItem::Type
                             || item->type() == UBGraphicsSvgItem::Type
                             || item->type() == UBGraphicsTextItem::Type
-                            || item->type() == UBGraphicsStrokesGroup::Type
+                            || item->type() == UBGraphicsStroke::Type
                             || item->type() == UBGraphicsGroupContainerItem::Type) {
 
 

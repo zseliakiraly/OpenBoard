@@ -58,7 +58,7 @@ class UBPersistenceManager;
 class UBGraphicsTriangle;
 class UBGraphicsCache;
 class UBGraphicsGroupContainerItem;
-class UBGraphicsStrokesGroup;
+//class UBGraphicsStrokesGroup;
 
 class UBSvgSubsetAdaptor
 {
@@ -173,7 +173,7 @@ class UBSvgSubsetAdaptor
                 QString mNamespaceUri;
                 UBGraphicsScene *mScene;
 
-                QHash<QString,UBGraphicsStrokesGroup*> mStrokesList;
+//                QHash<QString,UBGraphicsStrokesGroup*> mStrokesList;
         };
 
         class UBSvgSubsetWriter
