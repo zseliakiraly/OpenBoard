@@ -431,6 +431,9 @@ void UBDrawingController::beginStroke(UBGraphicsScene *scene, const QPointF& sce
 
     // QPainterPath::addElipse(QPointF center, qreal radiusX, qreal radiusY)
     mCurrentStroke->mPath.addEllipse(scenePos, width/2., width/2.);
+    mCurrentStroke->mPolygons << mCurrentStroke->mPath.toFillPolygon();
+    //mCurrentStroke->mPolygonItems << new QGraphicsPolygonItem(mCurrentStroke->mPolygons.last(), mCurrentStroke);
+    mCurrentStroke->mLastSubpath = mCurrentStroke->mPath;
 
     scene->addItem(mCurrentStroke);
     // For now
@@ -443,6 +446,8 @@ void UBDrawingController::newStrokePoint(const QPointF& scenePos, const qreal& p
     width /= UBApplication::boardController->systemScaleFactor();
     width /= UBApplication::boardController->currentZoom();
 
+    mCurrentStroke->addPoint(scenePos, width);
+    /*
     strokePoint newPoint(scenePos, width);
 
     // Are we interpolating?
@@ -464,13 +469,13 @@ void UBDrawingController::newStrokePoint(const QPointF& scenePos, const qreal& p
         mCurrentStroke->mReceivedPoints << newPoint;
         mCurrentStroke->mDrawnPoints << newPoint;
     }
+    */
 }
 
 void UBDrawingController::finishStroke()
 {
     // Simplify the stroke
-    //mCurrentStroke->mPath = mCurrentStroke->mPath.simplified();
-    //mCurrentStroke->update();
+    mCurrentStroke->mPath = mCurrentStroke->mPath.simplified();
 
     mCurrentStroke = nullptr;
     // other cleanup things?

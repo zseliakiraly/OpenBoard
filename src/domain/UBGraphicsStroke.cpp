@@ -26,6 +26,7 @@
 
 
 #include "UBGraphicsStroke.h";
+#include "frameworks/UBGeometryUtils.h"
 
 UBGraphicsStroke::UBGraphicsStroke(QGraphicsItem* parent)
     : QGraphicsItem(parent)
@@ -109,10 +110,61 @@ QRectF UBGraphicsStroke::boundingRect() const
     return mPath.boundingRect();
 }
 
+void UBGraphicsStroke::addPoint(const QPointF& point, qreal width)
+{
+    strokePoint newPoint(point, width);
+
+    // Are we interpolating?
+    //if (!this->smoothStrokes()) {
+        // get the last drawn strokePoint
+        strokePoint previousPoint = mReceivedPoints.last();
+
+        // Add the newly received point to the stroke
+
+        // draw a straight line to scenePos, using UBGeometryUtils::curveToPath (curveToPath with two points will just return a line)
+        QPainterPath path = UBGeometryUtils::curveToPath(QList<strokePoint>() << previousPoint << newPoint, true, true);
+
+
+        mPolygons << path.subtracted(mLastSubpath).toFillPolygon(); // So this was the slow part... the rest is actually quite smooth
+        mLastSubpath = path;
+        //mPolygons << path.toFillPolygon();
+        QGraphicsPolygonItem* pi = new QGraphicsPolygonItem(mPolygons.last(), this);
+        pi->setBrush(QBrush(mColorOnLightBackground));
+        pi->setPen(Qt::NoPen);
+        //mPolygonItems << pi;
+
+        mPath.addPath(path);
+
+        // Force update, otherwise the new subpath won't be painted
+        //QRectF subpathRect = path.boundingRect();
+        //qDebug() << "adding path with boundingrect: " << subpathRect;
+        //qDebug() << "total bounding rect: " << this->boundingRect();
+        //subpathRect.translated(-(boundingRect().topLeft());
+        //update(subpathRect);
+
+        // For now
+       // mCurrentStroke->mPolygons = mCurrentStroke->mPath.toFillPolygons();
+        mReceivedPoints << newPoint;
+        mDrawnPoints << newPoint;
+    //}
+
+
+}
+
 void UBGraphicsStroke::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setBrush(QBrush(mColorOnLightBackground));
     painter->setPen(Qt::NoPen);
+    /*
+
+     Also, check if we can now use QOpenGLWidget as viewport
+
+
+     Potential alternative: the drawing controller draws a stroke as a collection of polygons.. like before. except that these aren't stored as such; they're replaced
+     by the path representation when the stroke is finished.
+
+     */
+
     painter->drawPath(mPath);
 
     //Delegate()->postpaint(painter, &styleOption, widget);

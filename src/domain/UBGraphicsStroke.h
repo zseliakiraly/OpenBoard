@@ -56,7 +56,7 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
 
         bool hasAlpha() const;
 
-        //QList<QPair<QPointF, qreal> > addPoint(const QPointF& point, qreal width);
+        void addPoint(const QPointF& point, qreal width);
 
         const QList<QPair<QPointF, qreal> >& points() { return mDrawnPoints; }
 
@@ -77,6 +77,8 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
 
     private:
         QList<QPolygonF> mPolygons;
+        QList<QGraphicsPolygonItem*> mPolygonItems;
+        QPainterPath mLastSubpath;
 
         /// Points that were drawn by the user (i.e, actually received through input device)
         QList<QPair<QPointF, qreal> > mReceivedPoints;
