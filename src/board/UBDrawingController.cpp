@@ -475,7 +475,7 @@ void UBDrawingController::newStrokePoint(const QPointF& scenePos, const qreal& p
 void UBDrawingController::finishStroke()
 {
     // Simplify the stroke
-    mCurrentStroke->mPath = mCurrentStroke->mPath.simplified();
+    //mCurrentStroke->mPath = mCurrentStroke->mPath.simplified();
 
     mCurrentStroke = nullptr;
     // other cleanup things?

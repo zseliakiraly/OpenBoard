@@ -128,10 +128,12 @@ void UBGraphicsStroke::addPoint(const QPointF& point, qreal width)
         mPolygons << path.subtracted(mLastSubpath).toFillPolygon(); // So this was the slow part... the rest is actually quite smooth
         mLastSubpath = path;
         //mPolygons << path.toFillPolygon();
+        /*
         QGraphicsPolygonItem* pi = new QGraphicsPolygonItem(mPolygons.last(), this);
         pi->setBrush(QBrush(mColorOnLightBackground));
         pi->setPen(Qt::NoPen);
-        //mPolygonItems << pi;
+        mPolygonItems << pi;
+        */
 
         mPath.addPath(path);
 
@@ -140,7 +142,7 @@ void UBGraphicsStroke::addPoint(const QPointF& point, qreal width)
         //qDebug() << "adding path with boundingrect: " << subpathRect;
         //qDebug() << "total bounding rect: " << this->boundingRect();
         //subpathRect.translated(-(boundingRect().topLeft());
-        //update(subpathRect);
+        update();
 
         // For now
        // mCurrentStroke->mPolygons = mCurrentStroke->mPath.toFillPolygons();
