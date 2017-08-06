@@ -37,7 +37,6 @@
 
 #include "frameworks/UBGeometryUtils.h"
 #include "frameworks/UBPlatformUtils.h"
-#include "frameworks/UBInterpolator.h"
 
 #include "core/UBApplication.h"
 #include "core/UBSettings.h"
@@ -389,7 +388,6 @@ bool UBGraphicsScene::inputDevicePress(const QPointF& scenePos, const qreal& pre
         }
 
         else if (currentTool == UBStylusTool::Eraser) {
-            /*
             mAddedItems.clear();
             mRemovedItems.clear();
             moveTo(scenePos);
@@ -399,7 +397,6 @@ bool UBGraphicsScene::inputDevicePress(const QPointF& scenePos, const qreal& pre
             eraserWidth /= UBApplication::boardController->currentZoom();
 
             eraseLineTo(scenePos, eraserWidth);
-            */
             drawEraser(scenePos, mInputDeviceIsPressed);
 
             accepted = true;
@@ -449,7 +446,7 @@ bool UBGraphicsScene::inputDeviceMove(const QPointF& scenePos, const qreal& pres
             eraserWidth /= UBApplication::boardController->systemScaleFactor();
             eraserWidth /= UBApplication::boardController->currentZoom();
 
-            //eraseLineTo(position, eraserWidth);
+            eraseLineTo(position, eraserWidth);
         }
 
         else if (currentTool == UBStylusTool::Pointer)
@@ -604,7 +601,21 @@ void UBGraphicsScene::moveTo(const QPointF &pPoint)
 
 void UBGraphicsScene::eraseLineTo(const QPointF &pEndPoint, const qreal &pWidth)
 {
+    const QLineF line(mPreviousPoint, pEndPoint);
+    mPreviousPoint = pEndPoint;
 
+    const QPolygonF eraserPolygon = UBGeometryUtils::lineToPolygon(line, pWidth);
+
+    QList<QGraphicsItem*> intersected = items(eraserPolygon);
+    foreach (QGraphicsItem* item, intersected) {
+        UBGraphicsStroke* stroke = dynamic_cast<UBGraphicsStroke*>(item);
+        if (stroke)
+            stroke->erase(eraserPolygon);
+
+        //if (stroke->isEmpty())
+            // delete it
+
+    }
 }
 
 void UBGraphicsScene::setBackground(bool pIsDark, UBPageBackground pBackground)

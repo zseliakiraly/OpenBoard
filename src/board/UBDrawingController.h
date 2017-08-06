@@ -31,9 +31,11 @@
 #define UBDRAWINGCONTROLLER_H_
 
 #include <QtCore>
+#include <QtGui>
 
 #include "core/UB.h"
 
+#include <QGraphicsItem>
 #include "domain/UBGraphicsStroke.h"
 
 class UBAbstractDrawRuler;
@@ -83,7 +85,7 @@ class UBDrawingController : public QObject
         void finishStroke();
 
         bool smoothStrokes();
-        bool simplifyStrokesAfterDrawing(); // TODO: actually, check whether we're talking about marker or pen strokes to know what to return
+        bool simplifyStrokesAfterDrawing();
 
         /* --------- */
 

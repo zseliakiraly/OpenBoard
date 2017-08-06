@@ -39,11 +39,11 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
 {
     Q_OBJECT
 
-    friend class UBDrawingController; // for now. but maybe drawingController should just interface via public functions
+    //friend class UBDrawingController; // for now. but maybe drawingController should just interface via public functions
 
     public:
-        UBGraphicsStroke(QGraphicsItem* parent = NULL);
-        UBGraphicsStroke(QList<QPolygonF> polygons, QGraphicsItem* parent = NULL);
+        UBGraphicsStroke(bool smooth = false, QGraphicsItem* parent = NULL);
+        UBGraphicsStroke(QList<QPolygonF> polygons, bool smooth = false, QGraphicsItem* parent = NULL);
         virtual ~UBGraphicsStroke();
 
         enum { Type = UBGraphicsItemType::StrokeItemType };
@@ -55,8 +55,11 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
         void setUuid(const QUuid &pUuid);
 
         bool hasAlpha() const;
+        void setColor(QColor lightBackground, QColor darkBackground);
+        QColor color(bool lightBackground = true) const;
 
         void addPoint(const QPointF& point, qreal width);
+        void addPolygonItem(QGraphicsPolygonItem* polygonItem); // for use by undo/redo commands
 
         const QList<QPair<QPointF, qreal> >& points() { return mDrawnPoints; }
 
@@ -64,6 +67,9 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
         bool hasPressure();
 
         QRectF boundingRect() const;
+
+        void erase(const QPolygonF &polygon);
+        void erase(const QPainterPath &path);
 
     protected:
         QPainterPath shape () const;
@@ -76,9 +82,18 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     private:
-        QList<QPolygonF> mPolygons;
-        QList<QGraphicsPolygonItem*> mPolygonItems;
+
+        void initPolygonItem(QGraphicsPolygonItem* polygonItem);
+        virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
+
+        QList<QPolygonF> mPolygons; // why is this here? remove if no longer necessary
+        QList<QGraphicsPolygonItem*> mPolygonItems; // individual polygons making up the stroke. Has to be done this way because updating a path each time a point is added is much too slow
         QPainterPath mLastSubpath;
+
+        QPainterPath mPath;  // mPath represents the entire stroke
+
+        bool mShouldPaintPath; // If true, mPath is painted
 
         /// Points that were drawn by the user (i.e, actually received through input device)
         QList<QPair<QPointF, qreal> > mReceivedPoints;
@@ -86,7 +101,8 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
         /// All the points (including interpolated) that are used to draw the stroke
         QList<QPair<QPointF, qreal> > mDrawnPoints;
 
-        QPainterPath mPath; // would it make sense to instead have UBGraphicsStroke inherit QPainterPath?
+        bool mSmoothDrawing;
+
 
         QColor mColorOnDarkBackground;
         QColor mColorOnLightBackground;

@@ -25,11 +25,13 @@
  */
 
 
-#include "UBGraphicsStroke.h";
+#include "UBGraphicsStroke.h"
 #include "frameworks/UBGeometryUtils.h"
+#include <QGraphicsOpacityEffect>
 
-UBGraphicsStroke::UBGraphicsStroke(QGraphicsItem* parent)
+UBGraphicsStroke::UBGraphicsStroke(bool smooth, QGraphicsItem* parent)
     : QGraphicsItem(parent)
+    , mSmoothDrawing(smooth)
 {
     setDelegate(new UBGraphicsItemDelegate(this, 0, GF_COMMON
                                            | GF_RESPECT_RATIO
@@ -39,16 +41,19 @@ UBGraphicsStroke::UBGraphicsStroke(QGraphicsItem* parent)
     setData(UBGraphicsItemData::ItemLayerType, UBItemLayerType::Object);
 
     setUuid(QUuid::createUuid());
-    setData(UBGraphicsItemData::itemLayerType, QVariant(itemLayerType::ObjectItem)); //Necessary to set if we want z value to be assigned correctly
+    setData(UBGraphicsItemData::itemLayerType, QVariant(itemLayerType::ObjectItem));
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
 
+    //setFlag(QGraphicsItem::ItemContainsChildrenInShape, true);
+
     mPath.setFillRule(Qt::WindingFill);
+    mShouldPaintPath = false;
 }
 
-UBGraphicsStroke::UBGraphicsStroke(QList<QPolygonF> polygons, QGraphicsItem* parent)
-    : UBGraphicsStroke(parent)
+UBGraphicsStroke::UBGraphicsStroke(QList<QPolygonF> polygons, bool smooth, QGraphicsItem* parent)
+    : UBGraphicsStroke(smooth, parent) // C++11
 {
     mPolygons = polygons;
 }
@@ -57,13 +62,36 @@ UBGraphicsStroke::~UBGraphicsStroke() {}
 
 UBItem* UBGraphicsStroke::deepCopy() const
 {
-
-    // call copyitemparameters
+    UBGraphicsStroke* stroke = new UBGraphicsStroke(mSmoothDrawing, this->parentItem());
+    copyItemParameters(stroke);
+    return stroke;
 }
 
 void UBGraphicsStroke::copyItemParameters(UBItem *copy) const
 {
+    UBGraphicsStroke* other = dynamic_cast<UBGraphicsStroke*>(copy);
+    if (!other)
+        return;
 
+    other->mPath = mPath;
+    other->setColor(color(true), color(false));
+
+    other->mDrawnPoints = mDrawnPoints;
+    other->mReceivedPoints = mReceivedPoints;
+
+    other->setPos(this->pos());
+    other->setTransform(this->transform());
+    other->setFlag(QGraphicsItem::ItemIsMovable, true);
+    other->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    other->setData(UBGraphicsItemData::ItemLayerType, this->data(UBGraphicsItemData::ItemLayerType));
+    other->setData(UBGraphicsItemData::ItemLocked, this->data(UBGraphicsItemData::ItemLocked));
+    other->setData(UBGraphicsItemData::ItemEditable, data(UBGraphicsItemData::ItemEditable).toBool());
+    other->setZValue(this->zValue());
+
+    foreach(QGraphicsPolygonItem* poly, mPolygonItems) {
+        QGraphicsPolygonItem* pi = new QGraphicsPolygonItem(poly->polygon(), other);
+        other->initPolygonItem(pi);
+    }
 }
 
 void UBGraphicsStroke::setUuid(const QUuid &pUuid)
@@ -72,21 +100,67 @@ void UBGraphicsStroke::setUuid(const QUuid &pUuid)
     setData(UBGraphicsItemData::ItemUuid, QVariant(pUuid)); //store item uuid inside the QGraphicsItem to fast operations with Items on the scene
 }
 
+/**
+ * @brief Returns true if the stroke is at least partially transparent.
+ */
 bool UBGraphicsStroke::hasAlpha() const
 {
-    return (mColorOnDarkBackground.alpha() || mColorOnLightBackground.alpha());
+    return (qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())
+            && qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())->opacity() != 1.0);
 }
 
+/**
+ * @brief Set the stroke's color, on light and dark backgrounds. Transparency is supported.
+ */
+void UBGraphicsStroke::setColor(QColor lightBackground, QColor darkBackground)
+{
+    // Alpha channel is removed from the colors, as transparency is managed by a graphics effect.
+    // To get the original QColors (including transparency), use UBGraphicsStroke::color
+
+    if (lightBackground.alpha() != 255) {
+        QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(this);
+        effect->setOpacity(lightBackground.alphaF());
+        setGraphicsEffect(effect);
+        lightBackground.setAlpha(255);
+        darkBackground.setAlpha(255);
+    }
+
+    mColorOnDarkBackground = darkBackground;
+    mColorOnLightBackground = lightBackground;
+}
+
+
+/**
+ * @brief Return the stroke's color, including transparency
+ * @param lightBackground If true, the stroke's color on light backgrounds is returned; otherwise, its color on dark backgrounds is returned.
+ */
+QColor UBGraphicsStroke::color(bool lightBackground) const
+{
+    QColor c = lightBackground ? mColorOnLightBackground : mColorOnDarkBackground;
+
+    if (hasAlpha()) {
+        c.setAlphaF(qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())->opacity());
+    }
+
+    return c;
+}
+
+/**
+ * @brief Simplify the stroke, removing unneeded points & polygons
+ *
+ * This can be called after drawing the stroke, to cut down on the number of objects on-screen.
+ */
 void UBGraphicsStroke::simplify()
 {
-    // TODO
+    // TODO. Replaces itself with a simplified version
 
 }
 
+/**
+ * @brief Return true if the width isn't constant across all points, or if there is only one point in the stroke.
+ */
 bool UBGraphicsStroke::hasPressure()
 {
-    // Returns true if the width isn't constant across all points.
-
     if (mDrawnPoints.size() < 2)
         return true;
 
@@ -110,30 +184,45 @@ QRectF UBGraphicsStroke::boundingRect() const
     return mPath.boundingRect();
 }
 
+/**
+ * @brief Add a point to the end of the stroke, with a specified width
+ *
+ * The point is assumed to be a point received by the input device (mouse or pen). Internally, this may be used
+ * to calculate a smoother curve to approximately join the last points of the stroke.
+ *
+ * In other words, strokes are built by adding one point (and width) at a time; the stroke handles the creation of
+ * polygons that end up being displayed to the user.
+ */
 void UBGraphicsStroke::addPoint(const QPointF& point, qreal width)
 {
     strokePoint newPoint(point, width);
+    QPainterPath path;
 
-    // Are we interpolating?
-    //if (!this->smoothStrokes()) {
+    if (mReceivedPoints.empty())
+        path.addEllipse(point, width/2., width/2.);
+
+    else {
+    //if (mSmoothDrawing) {
         // get the last drawn strokePoint
         strokePoint previousPoint = mReceivedPoints.last();
 
-        // Add the newly received point to the stroke
-
         // draw a straight line to scenePos, using UBGeometryUtils::curveToPath (curveToPath with two points will just return a line)
-        QPainterPath path = UBGeometryUtils::curveToPath(QList<strokePoint>() << previousPoint << newPoint, true, true);
+        path = UBGeometryUtils::curveToPath(QList<strokePoint>() << previousPoint << newPoint, true, true);
+    }
 
+        // Problem: just drawing the path (after mPath.addPath()) requires a call to update() for the new portion to be displayed.
+        // but this is really slow. So instead we create a polygonItem and display that instead.
 
-        mPolygons << path.subtracted(mLastSubpath).toFillPolygon(); // So this was the slow part... the rest is actually quite smooth
+        //mPolygons << path.subtracted(mLastSubpath).toFillPolygon(); // So this was the slow part... the rest is actually quite smooth. Note: don't call subtracted() on large paths.
+
         mLastSubpath = path;
-        //mPolygons << path.toFillPolygon();
-        /*
+        mPolygons << path.toFillPolygon();
+
         QGraphicsPolygonItem* pi = new QGraphicsPolygonItem(mPolygons.last(), this);
-        pi->setBrush(QBrush(mColorOnLightBackground));
-        pi->setPen(Qt::NoPen);
+        initPolygonItem(pi);
+
         mPolygonItems << pi;
-        */
+
 
         mPath.addPath(path);
 
@@ -142,7 +231,8 @@ void UBGraphicsStroke::addPoint(const QPointF& point, qreal width)
         //qDebug() << "adding path with boundingrect: " << subpathRect;
         //qDebug() << "total bounding rect: " << this->boundingRect();
         //subpathRect.translated(-(boundingRect().topLeft());
-        update();
+
+        //update(); // this gets slow if called on a large path.
 
         // For now
        // mCurrentStroke->mPolygons = mCurrentStroke->mPath.toFillPolygons();
@@ -155,21 +245,109 @@ void UBGraphicsStroke::addPoint(const QPointF& point, qreal width)
 
 void UBGraphicsStroke::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setBrush(QBrush(mColorOnLightBackground));
-    painter->setPen(Qt::NoPen);
-    /*
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
 
-     Also, check if we can now use QOpenGLWidget as viewport
-
-
-     Potential alternative: the drawing controller draws a stroke as a collection of polygons.. like before. except that these aren't stored as such; they're replaced
-     by the path representation when the stroke is finished.
-
-     */
-
-    painter->drawPath(mPath);
+    if (mShouldPaintPath) {
+        painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+        painter->setBrush(QBrush(mColorOnLightBackground));
+        painter->setPen(Qt::NoPen);
+        painter->drawPath(mPath);
+    }
 
     //Delegate()->postpaint(painter, &styleOption, widget);
 }
 
+
+/**
+ * @brief Erase the portion of the stroke contained in the given polygon
+ */
+void UBGraphicsStroke::erase(const QPolygonF &polygon)
+{
+    QPainterPath path;
+    path.addPolygon(polygon);
+    erase(path);
+}
+
+/**
+ * @brief Erase the portion of the stroke contained in the given path
+ */
+void UBGraphicsStroke::erase(const QPainterPath& path)
+{
+
+    QPainterPath eraserPath = mapFromScene(path);
+
+    // option 1: most likely wayyyyy too slow: just call path.subtracted()
+
+    // To allow undoing / redoing, we keep track of which polygonItems were deleted or modified.
+    // PolygonItems that are completely contained in `eraserPath` are just deleted; the ones
+    // that intersect `eraserPath` are deleted and replaced by a modified item.
+    // The more straight-forward approach would be to simply modify their shape, but this would
+    // greatly complicate undo/redo operations.
+
+    QSet<QGraphicsPolygonItem*> removedPolygonItems;
+    QSet<QGraphicsPolygonItem*> addedPolygonItems;
+
+    QMutableListIterator<QGraphicsPolygonItem*> it(mPolygonItems);
+    while (it.hasNext()) {
+        QGraphicsPolygonItem* poly = it.next();
+        if (poly->collidesWithPath(eraserPath)) {
+            //poly->setBrush(QBrush(Qt::black));
+
+            QPainterPath polyPath = poly->shape();
+
+            poly->scene()->removeItem(poly);
+            it.remove();
+
+            if (eraserPath.contains(polyPath)) {
+                removedPolygonItems << poly;
+            }
+
+            else {
+                polyPath = polyPath.subtracted(eraserPath);
+                //poly->setPolygon(polyPath.toFillPolygon());
+
+                QGraphicsPolygonItem* pi = new QGraphicsPolygonItem(polyPath.toFillPolygon(), this);
+                initPolygonItem(pi);
+
+                removedPolygonItems << poly;
+                addedPolygonItems << pi;
+            }
+        }
+    }
+    foreach(QGraphicsPolygonItem* p, addedPolygonItems)
+        mPolygonItems << p;
+
+
+    // handle undo/redo
+}
+
+
+/**
+ * @brief Initialize a QGraphicsPolygonItem with color, flags etc.
+ *
+ * This function also reparents the polygonItem to the current UBGraphicsStroke instance.
+ */
+void UBGraphicsStroke::initPolygonItem(QGraphicsPolygonItem* polygonItem)
+{
+    polygonItem->setParentItem(this);
+
+    polygonItem->setFlag(ItemStacksBehindParent, true);
+    polygonItem->setFlag(ItemIsSelectable, false);
+    polygonItem->setFlag(ItemIsMovable, false);
+
+    polygonItem->setBrush(QBrush(mColorOnLightBackground));
+    polygonItem->setPen(Qt::NoPen);
+
+}
+
+QVariant UBGraphicsStroke::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    QVariant newValue = value;
+
+    if(Delegate())
+        newValue = Delegate()->itemChange(change, value);
+
+    return QGraphicsItem::itemChange(change, newValue);
+}
 

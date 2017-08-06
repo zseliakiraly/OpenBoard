@@ -168,8 +168,10 @@ int UBDrawingController::currentToolWidthIndex()
 {
     if (stylusTool() == UBStylusTool::Pen || stylusTool() == UBStylusTool::Line)
         return UBSettings::settings()->penWidthIndex();
+
     else if (stylusTool() == UBStylusTool::Marker)
         return UBSettings::settings()->markerWidthIndex();
+
     else
         return -1;
 }
@@ -179,8 +181,10 @@ qreal UBDrawingController::currentToolWidth()
 {
     if (stylusTool() == UBStylusTool::Pen || stylusTool() == UBStylusTool::Line)
         return UBSettings::settings()->currentPenWidth();
+
     else if (stylusTool() == UBStylusTool::Marker)
         return UBSettings::settings()->currentMarkerWidth();
+
     else
         //failsafe
         return UBSettings::settings()->currentPenWidth();
@@ -190,11 +194,9 @@ qreal UBDrawingController::currentToolWidth()
 void UBDrawingController::setLineWidthIndex(int index)
 {
     if (stylusTool() == UBStylusTool::Marker)
-    {
         UBSettings::settings()->setMarkerWidthIndex(index);
-    }
-    else
-    {
+
+    else {
         UBSettings::settings()->setPenWidthIndex(index);
 
         if(stylusTool() != UBStylusTool::Line
@@ -211,17 +213,13 @@ void UBDrawingController::setLineWidthIndex(int index)
 int UBDrawingController::currentToolColorIndex()
 {
     if (stylusTool() == UBStylusTool::Pen || stylusTool() == UBStylusTool::Line)
-    {
         return UBSettings::settings()->penColorIndex();
-    }
+
     else if (stylusTool() == UBStylusTool::Marker)
-    {
         return UBSettings::settings()->markerColorIndex();
-    }
+
     else
-    {
         return -1;
-    }
 }
 
 
@@ -234,25 +232,13 @@ QColor UBDrawingController::currentToolColor()
 QColor UBDrawingController::toolColor(bool onDarkBackground)
 {
     if (stylusTool() == UBStylusTool::Pen || stylusTool() == UBStylusTool::Line)
-    {
         return UBSettings::settings()->penColor(onDarkBackground);
-    }
+
     else if (stylusTool() == UBStylusTool::Marker)
-    {
         return UBSettings::settings()->markerColor(onDarkBackground);
-    }
+
     else
-    {
-        //failsafe
-        if (onDarkBackground)
-        {
-            return Qt::white;
-        }
-        else
-        {
-            return Qt::black;
-        }
-    }
+        return onDarkBackground ? Qt::white : Qt::black;
 }
 
 
@@ -261,13 +247,10 @@ void UBDrawingController::setColorIndex(int index)
     Q_ASSERT(index >= 0 && index < UBSettings::settings()->colorPaletteSize);
 
     if (stylusTool() == UBStylusTool::Marker)
-    {
         UBSettings::settings()->setMarkerColorIndex(index);
-    }
+
     else
-    {
         UBSettings::settings()->setPenColorIndex(index);
-    }
 
     emit colorIndexChanged(index);
 }
@@ -282,13 +265,10 @@ void UBDrawingController::setEraserWidthIndex(int index)
 void UBDrawingController::setPenColor(bool onDarkBackground, const QColor& color, int pIndex)
 {
     if (onDarkBackground)
-    {
         UBSettings::settings()->boardPenDarkBackgroundSelectedColors->setColor(pIndex, color);
-    }
+
     else
-    {
         UBSettings::settings()->boardPenLightBackgroundSelectedColors->setColor(pIndex, color);
-    }
 
     emit colorPaletteChanged();
 }
@@ -297,13 +277,10 @@ void UBDrawingController::setPenColor(bool onDarkBackground, const QColor& color
 void UBDrawingController::setMarkerColor(bool onDarkBackground, const QColor& color, int pIndex)
 {
     if (onDarkBackground)
-    {
         UBSettings::settings()->boardMarkerDarkBackgroundSelectedColors->setColor(pIndex, color);
-    }
+
     else
-    {
         UBSettings::settings()->boardMarkerLightBackgroundSelectedColors->setColor(pIndex, color);
-    }
 
     emit colorPaletteChanged();
 }
@@ -326,10 +303,7 @@ void UBDrawingController::setMarkerAlpha(qreal alpha)
 void UBDrawingController::penToolSelected(bool checked)
 {
     if (checked)
-    {
         setStylusTool(UBStylusTool::Pen);
-
-    }
 }
 
 void UBDrawingController::eraserToolSelected(bool checked)
@@ -411,33 +385,19 @@ void UBDrawingController::beginStroke(UBGraphicsScene *scene, const QPointF& sce
     // check if using the line tool or the pen or the marker...
 
     // Initialize mCurrentStroke
-    mCurrentStroke = new UBGraphicsStroke(); // parent?
+    mCurrentStroke = new UBGraphicsStroke(smoothStrokes()); // parent?
 
     // Set its color
-    mCurrentStroke->mColorOnDarkBackground = toolColor(true);
-    mCurrentStroke->mColorOnLightBackground = toolColor(false);
-
+    mCurrentStroke->setColor(toolColor(false), toolColor(true));
 
     // Stroke thickness = current pen width, multiplied by min(0.2, pressure)
-    qreal width = currentToolWidth() * pressure;
+    qreal width = currentToolWidth() * qMin(0.2, pressure);
     width /= UBApplication::boardController->systemScaleFactor();
     width /= UBApplication::boardController->currentZoom();
 
-    // Add the current point to it, as its first point.
-    mCurrentStroke->mReceivedPoints << strokePoint(scenePos, width);
-    mCurrentStroke->mDrawnPoints << strokePoint(scenePos, width);
-
-    // The stroke's path at this point is a circle, with a diameter depending on the pressure
-
-    // QPainterPath::addElipse(QPointF center, qreal radiusX, qreal radiusY)
-    mCurrentStroke->mPath.addEllipse(scenePos, width/2., width/2.);
-    mCurrentStroke->mPolygons << mCurrentStroke->mPath.toFillPolygon();
-    //mCurrentStroke->mPolygonItems << new QGraphicsPolygonItem(mCurrentStroke->mPolygons.last(), mCurrentStroke);
-    mCurrentStroke->mLastSubpath = mCurrentStroke->mPath;
+    mCurrentStroke->addPoint(scenePos, width);
 
     scene->addItem(mCurrentStroke);
-    // For now
-    //mCurrentStroke->mPolygons = mCurrentStroke->mPath.toFillPolygons();
 }
 
 void UBDrawingController::newStrokePoint(const QPointF& scenePos, const qreal& pressure)
@@ -447,35 +407,29 @@ void UBDrawingController::newStrokePoint(const QPointF& scenePos, const qreal& p
     width /= UBApplication::boardController->currentZoom();
 
     mCurrentStroke->addPoint(scenePos, width);
-    /*
-    strokePoint newPoint(scenePos, width);
-
-    // Are we interpolating?
-    if (!this->smoothStrokes()) {
-        // get the last drawn strokePoint
-        strokePoint previousPoint = mCurrentStroke->mReceivedPoints.last();
-
-        // Add the newly received point to the stroke
-
-        // draw a straight line to scenePos, using UBGeometryUtils::curveToPath (curveToPath with two points will just return a line)
-        QPainterPath path = UBGeometryUtils::curveToPath(QList<strokePoint>() << previousPoint << newPoint, true, true);
-        mCurrentStroke->mPath.addPath(path);
-
-        // Force update, otherwise the new subpath won't be painted
-        mCurrentStroke->update();
-
-        // For now
-       // mCurrentStroke->mPolygons = mCurrentStroke->mPath.toFillPolygons();
-        mCurrentStroke->mReceivedPoints << newPoint;
-        mCurrentStroke->mDrawnPoints << newPoint;
-    }
-    */
 }
 
 void UBDrawingController::finishStroke()
 {
     // Simplify the stroke
-    //mCurrentStroke->mPath = mCurrentStroke->mPath.simplified();
+    /*
+    mCurrentStroke->mPath = mCurrentStroke->mPath.simplified();
+    qDeleteAll(mCurrentStroke->mPolygonItems);
+    mCurrentStroke->mPolygonItems.clear();
+
+    QList<QPolygonF> polys = mCurrentStroke->mPath.toFillPolygons();
+
+    foreach(QPolygonF poly, polys) {
+        QGraphicsPolygonItem* pi = new QGraphicsPolygonItem(poly, mCurrentStroke);
+        //pi->setFlag(0x100, true);
+        pi->setBrush(QBrush(mCurrentStroke->mColorOnLightBackground));
+        pi->setPen(Qt::NoPen);
+        mCurrentStroke->mPolygonItems << pi;
+    }
+    */
+
+    //mCurrentStroke->mShouldPaintPath = true;
+    //mCurrentStroke->update();
 
     mCurrentStroke = nullptr;
     // other cleanup things?
@@ -485,11 +439,20 @@ void UBDrawingController::finishStroke()
 bool UBDrawingController::smoothStrokes()
 {
     //return UBSettings::settings()->boardInterpolatePenStrokes;
+    if (mStylusTool == UBStylusTool::Pen)
+        return UBSettings::settings()->boardInterpolatePenStrokes;
+    else if (mStylusTool == UBStylusTool::Marker)
+        return UBSettings::settings()->boardInterpolateMarkerStrokes;
+
     return false;
 }
 
-// TODO: actually, check whether we're talking about marker or pen strokes to know what to return
 bool UBDrawingController::simplifyStrokesAfterDrawing()
 {
+    if (mStylusTool == UBStylusTool::Pen)
+        return UBSettings::settings()->boardSimplifyPenStrokes;
+    else if (mStylusTool == UBStylusTool::Marker)
+        return UBSettings::settings()->boardSimplifyMarkerStrokes;
+
     return false;
 }
