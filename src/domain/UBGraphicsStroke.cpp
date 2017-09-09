@@ -26,9 +26,18 @@
 
 
 #include "UBGraphicsStroke.h"
+#include "UBGraphicsScene.h"
+
+#include "core/UBApplication.h"
 #include "frameworks/UBGeometryUtils.h"
+
 #include <QGraphicsOpacityEffect>
 
+/**
+ * @brief Constructs a new UBGraphicsStroke
+ * @param smooth If true, the stroke will be interpolated as it is drawn, to have a smoother appearance.
+ * @param parent Passed to the QGraphicsItem constructor.
+ */
 UBGraphicsStroke::UBGraphicsStroke(bool smooth, QGraphicsItem* parent)
     : QGraphicsItem(parent)
     , mSmoothDrawing(smooth)
@@ -52,13 +61,20 @@ UBGraphicsStroke::UBGraphicsStroke(bool smooth, QGraphicsItem* parent)
     mShouldPaintPath = false;
 }
 
+/**
+ * @brief Constructs a new UBGraphicsStroke, from a list of polygons
+ */
 UBGraphicsStroke::UBGraphicsStroke(QList<QPolygonF> polygons, bool smooth, QGraphicsItem* parent)
     : UBGraphicsStroke(smooth, parent) // C++11
 {
     mPolygons = polygons;
 }
 
-UBGraphicsStroke::~UBGraphicsStroke() {}
+UBGraphicsStroke::~UBGraphicsStroke()
+{
+    if (QGraphicsItem::scene())
+        QGraphicsItem::scene()->removeItem(this);
+}
 
 UBItem* UBGraphicsStroke::deepCopy() const
 {
@@ -118,7 +134,7 @@ void UBGraphicsStroke::setColor(QColor lightBackground, QColor darkBackground)
     // To get the original QColors (including transparency), use UBGraphicsStroke::color
 
     if (lightBackground.alpha() != 255) {
-        QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(this);
+        QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect();
         effect->setOpacity(lightBackground.alphaF());
         setGraphicsEffect(effect);
         lightBackground.setAlpha(255);
@@ -261,18 +277,20 @@ void UBGraphicsStroke::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
 /**
  * @brief Erase the portion of the stroke contained in the given polygon
+ * @return A pair of sets: the removed polygonItems, and the added polygonItems
  */
-void UBGraphicsStroke::erase(const QPolygonF &polygon)
+QPair<QSet<QGraphicsItem *>, QSet<QGraphicsItem*> > UBGraphicsStroke::erase(const QPolygonF &polygon)
 {
     QPainterPath path;
     path.addPolygon(polygon);
-    erase(path);
+    return erase(path);
 }
 
 /**
  * @brief Erase the portion of the stroke contained in the given path
+ * @return A pair of sets: the removed polygonItems, and the added polygonItems
  */
-void UBGraphicsStroke::erase(const QPainterPath& path)
+QPair<QSet<QGraphicsItem *>, QSet<QGraphicsItem*> > UBGraphicsStroke::erase(const QPainterPath& path)
 {
 
     QPainterPath eraserPath = mapFromScene(path);
@@ -280,13 +298,13 @@ void UBGraphicsStroke::erase(const QPainterPath& path)
     // option 1: most likely wayyyyy too slow: just call path.subtracted()
 
     // To allow undoing / redoing, we keep track of which polygonItems were deleted or modified.
-    // PolygonItems that are completely contained in `eraserPath` are just deleted; the ones
-    // that intersect `eraserPath` are deleted and replaced by a modified item.
+    // PolygonItems that are completely contained in the eraser path are just deleted; the ones
+    // that intersect the path are deleted and replaced by a modified item.
     // The more straight-forward approach would be to simply modify their shape, but this would
     // greatly complicate undo/redo operations.
 
-    QSet<QGraphicsPolygonItem*> removedPolygonItems;
-    QSet<QGraphicsPolygonItem*> addedPolygonItems;
+    QSet<QGraphicsItem*> removedPolygonItems;
+    QSet<QGraphicsItem*> addedPolygonItems;
 
     QMutableListIterator<QGraphicsPolygonItem*> it(mPolygonItems);
     while (it.hasNext()) {
@@ -315,11 +333,10 @@ void UBGraphicsStroke::erase(const QPainterPath& path)
             }
         }
     }
-    foreach(QGraphicsPolygonItem* p, addedPolygonItems)
-        mPolygonItems << p;
+    foreach(QGraphicsItem* p, addedPolygonItems)
+        mPolygonItems << dynamic_cast<QGraphicsPolygonItem*>(p);
 
-
-    // handle undo/redo
+    return QPair<QSet<QGraphicsItem*>, QSet<QGraphicsItem*> >(removedPolygonItems, addedPolygonItems);
 }
 
 

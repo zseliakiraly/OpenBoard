@@ -150,6 +150,12 @@ void UBGraphicsItemUndoCommand::undo()
                 */
             }
 
+            if (item->type() == QGraphicsPolygonItem::Type) {
+
+                QGraphicsPolygonItem* pi = qgraphicsitem_cast<QGraphicsPolygonItem*>(item);
+                qDebug() << "Has parent? " << (pi->parentItem() != NULL);
+            }
+
             UBApplication::boardController->freezeW3CWidget(item, false);
         }
     }

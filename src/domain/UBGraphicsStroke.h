@@ -35,10 +35,8 @@
 
 typedef QPair<QPointF, qreal> strokePoint;
 
-class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, public UBGraphicsItem
+class UBGraphicsStroke : public QGraphicsItem, public UBItem, public UBGraphicsItem
 {
-    Q_OBJECT
-
     //friend class UBDrawingController; // for now. but maybe drawingController should just interface via public functions
 
     public:
@@ -68,8 +66,8 @@ class UBGraphicsStroke : public QObject, public QGraphicsItem, public UBItem, pu
 
         QRectF boundingRect() const;
 
-        void erase(const QPolygonF &polygon);
-        void erase(const QPainterPath &path);
+        QPair<QSet<QGraphicsItem*>, QSet<QGraphicsItem*> > erase(const QPolygonF &polygon);
+        QPair<QSet<QGraphicsItem*>, QSet<QGraphicsItem*> > erase(const QPainterPath &path);
 
     protected:
         QPainterPath shape () const;

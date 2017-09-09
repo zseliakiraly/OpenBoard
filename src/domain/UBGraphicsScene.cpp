@@ -481,6 +481,17 @@ bool UBGraphicsScene::inputDeviceRelease()
         accepted = true;
     }
 
+    if (mRemovedItems.size() > 0 || mAddedItems.size() > 0) {
+        UBGraphicsItemUndoCommand * uc = new UBGraphicsItemUndoCommand(this, mRemovedItems, mAddedItems);
+
+        if (UBApplication::undoStack)
+            UBApplication::undoStack->push(uc);
+
+        mRemovedItems.clear();
+        mAddedItems.clear();
+        accepted = true;
+    }
+
     mInputDeviceIsPressed = false;
 
     setDocumentUpdated();
@@ -609,11 +620,14 @@ void UBGraphicsScene::eraseLineTo(const QPointF &pEndPoint, const qreal &pWidth)
     QList<QGraphicsItem*> intersected = items(eraserPolygon);
     foreach (QGraphicsItem* item, intersected) {
         UBGraphicsStroke* stroke = dynamic_cast<UBGraphicsStroke*>(item);
-        if (stroke)
-            stroke->erase(eraserPolygon);
+        if (stroke) {
+             auto removedAndAdded = stroke->erase(eraserPolygon);
+             mRemovedItems += removedAndAdded.first;
+             mAddedItems += removedAndAdded.second;
+        }
 
         //if (stroke->isEmpty())
-            // delete it
+            // remove it from scene
 
     }
 }
