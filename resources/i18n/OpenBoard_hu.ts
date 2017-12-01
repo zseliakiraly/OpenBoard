@@ -12,15 +12,15 @@
     <name>DownloadDialog</name>
     <message>
         <source>Downloads</source>
-        <translation type="unfinished">Letöltések</translation>
+        <translation>Letöltések</translation>
     </message>
     <message>
         <source>Clean Up</source>
-        <translation type="unfinished">Ürítés</translation>
+        <translation>Ürítés</translation>
     </message>
     <message>
         <source>0 Items</source>
-        <translation type="unfinished">0 elem</translation>
+        <translation>0 elem</translation>
     </message>
 </context>
 <context>
@@ -31,297 +31,297 @@
     </message>
     <message>
         <source>Filename</source>
-        <translation type="unfinished">Fájlnév</translation>
+        <translation>Fájlnév</translation>
     </message>
     <message>
         <source>Try Again</source>
-        <translation type="unfinished">Próbálja újra</translation>
+        <translation>Próbálja újra</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation type="unfinished">Stop</translation>
+        <translation>Stop</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished">Megnyit</translation>
+        <translation>Megnyit</translation>
     </message>
 </context>
 <context>
     <name>IntranetPodcastPublishingDialog</name>
     <message>
         <source>Publish Podcast to YouTube</source>
-        <translation type="unfinished">Podcast közzététele Youtube-on</translation>
+        <translation>Podcast közzététele Youtube-on</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation type="unfinished">Cím</translation>
+        <translation>Cím</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation type="unfinished">Leírás</translation>
+        <translation>Leírás</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation type="unfinished">Szerző</translation>
+        <translation>Szerző</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Board</source>
-        <translation type="unfinished">Tábla</translation>
+        <translation>Tábla</translation>
     </message>
     <message>
         <source>Web</source>
-        <translation type="unfinished">Web</translation>
+        <translation>Web</translation>
     </message>
     <message>
         <source>Documents</source>
-        <translation type="unfinished">Dokumentumok</translation>
+        <translation>Dokumentumok</translation>
     </message>
     <message>
         <source>Stylus</source>
-        <translation type="unfinished">Toll</translation>
+        <translation>Toll</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation type="unfinished">Ctrl+T</translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <source>Backgrounds</source>
-        <translation type="unfinished">Hátterek</translation>
+        <translation>Hátterek</translation>
     </message>
     <message>
         <source>Change Background</source>
-        <translation type="unfinished">Háttér cseréje</translation>
+        <translation>Háttér cseréje</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation type="unfinished">Visszavon</translation>
+        <translation>Visszavon</translation>
     </message>
     <message>
         <source>Ctrl+Z</source>
-        <translation type="unfinished">Ctrl+Z</translation>
+        <translation>Ctrl+Z</translation>
     </message>
     <message>
         <source>Redo</source>
-        <translation type="unfinished">Újra</translation>
+        <translation>Újra</translation>
     </message>
     <message>
         <source>Ctrl+Y</source>
-        <translation type="unfinished">Ctrl+Y</translation>
+        <translation>Ctrl+Y</translation>
     </message>
     <message>
         <source>Previous</source>
-        <translation type="unfinished">Előző</translation>
+        <translation>Előző</translation>
     </message>
     <message>
         <source>Previous Page</source>
-        <translation type="unfinished">Előző oldal</translation>
+        <translation>Előző oldal</translation>
     </message>
     <message>
         <source>PgUp</source>
-        <translation type="unfinished">PgUp</translation>
+        <translation>PgUp</translation>
     </message>
     <message>
         <source>Next</source>
-        <translation type="unfinished">Következő</translation>
+        <translation>Következő</translation>
     </message>
     <message>
         <source>Next Page</source>
-        <translation type="unfinished">Következő oldal</translation>
+        <translation>Következő oldal</translation>
     </message>
     <message>
         <source>PgDown</source>
-        <translation type="unfinished">PgDown</translation>
+        <translation>PgDown</translation>
     </message>
     <message>
         <source>Manage Documents</source>
-        <translation type="unfinished">Dokumentumok kezelése</translation>
+        <translation>Dokumentumok kezelése</translation>
     </message>
     <message>
         <source>Ctrl+D</source>
-        <translation type="unfinished">Ctrl+D</translation>
+        <translation>Ctrl+D</translation>
     </message>
     <message>
         <source>Web Browsing</source>
-        <translation type="unfinished">Webböngészés</translation>
+        <translation>Webböngészés</translation>
     </message>
     <message>
         <source>Ctrl+W</source>
-        <translation type="unfinished">Ctrl+W</translation>
+        <translation>Ctrl+W</translation>
     </message>
     <message>
         <source>Quit</source>
-        <translation type="unfinished">Kilépés</translation>
+        <translation>Kilépés</translation>
     </message>
     <message>
         <source>Back</source>
-        <translation type="unfinished">Vissza</translation>
+        <translation>Vissza</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation type="unfinished">Balra</translation>
+        <translation>Balra</translation>
     </message>
     <message>
         <source>Forward</source>
-        <translation type="unfinished">Előre</translation>
+        <translation>Előre</translation>
     </message>
     <message>
         <source>Right</source>
-        <translation type="unfinished">Jobbra</translation>
+        <translation>Jobbra</translation>
     </message>
     <message>
         <source>Reload</source>
-        <translation type="unfinished">Újratölt</translation>
+        <translation>Újratölt</translation>
     </message>
     <message>
         <source>Home</source>
-        <translation type="unfinished">Kezdőlap</translation>
+        <translation>Kezdőlap</translation>
     </message>
     <message>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Könyvjelzők</translation>
     </message>
     <message>
         <source>Bookmark</source>
-        <translation type="unfinished">Oldal a Könyvjelzők közé</translation>
+        <translation>Oldal a Könyvjelzők közé</translation>
     </message>
     <message>
         <source>Ctrl+B</source>
-        <translation type="unfinished">Ctrl+B</translation>
+        <translation>Ctrl+B</translation>
     </message>
     <message>
         <source>Erase</source>
-        <translation type="unfinished">Kitöröl</translation>
+        <translation>Kitöröl</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">Tulajdonságok</translation>
+        <translation>Tulajdonságok</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished">Könyvtár</translation>
+        <translation>Könyvtár</translation>
     </message>
     <message>
         <source>Ctrl+L</source>
-        <translation type="unfinished">Ctrl+L</translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <source>Show Desktop</source>
-        <translation type="unfinished">Asztalt mutat</translation>
+        <translation>Asztalt mutat</translation>
     </message>
     <message>
         <source>Bigger</source>
-        <translation type="unfinished">Nagyobb</translation>
+        <translation>Nagyobb</translation>
     </message>
     <message>
         <source>Ctrl++</source>
-        <translation type="unfinished">Ctrl++</translation>
+        <translation>Ctrl++</translation>
     </message>
     <message>
         <source>Smaller</source>
-        <translation type="unfinished">Kisebb</translation>
+        <translation>Kisebb</translation>
     </message>
     <message>
         <source>Ctrl+-</source>
-        <translation type="unfinished">Ctrl+-</translation>
+        <translation>Ctrl+-</translation>
     </message>
     <message>
         <source>New Folder</source>
-        <translation type="unfinished">Új mappa</translation>
+        <translation>Új mappa</translation>
     </message>
     <message>
         <source>New Document</source>
-        <translation type="unfinished">Új dokumentum</translation>
+        <translation>Új dokumentum</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished">Import</translation>
+        <translation>Import</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished">Export/translation>
+        <translation>Export/translation>
     </message>
     <message>
         <source>Open in Board</source>
-        <translation type="unfinished">Táblán megnyit</translation>
+        <translation>Táblán megnyit</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation type="unfinished">Ctrl+O</translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <source>Duplicate</source>
-        <translation type="unfinished">Megkettőz</translation>
+        <translation>Megkettőz</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Töröl</translation>
+        <translation>Töröl</translation>
     </message>
     <message>
         <source>Del</source>
-        <translation type="unfinished">Tör.</translation>
+        <translation>Tör.</translation>
     </message>
     <message>
         <source>Add to Working Document</source>
-        <translation type="unfinished">Hozzáadás a munkadokumentumhoz</translation>
+        <translation>Hozzáadás a munkadokumentumhoz</translation>
     </message>
     <message>
         <source>Add Selected Content to Open Document</source>
-        <translation type="unfinished">A kijelölt Tartalom hozzáadása a megnyitott dokumentumhoz</translation>
+        <translation>A kijelölt Tartalom hozzáadása a megnyitott dokumentumhoz</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished">Hozzáad</translation>
+        <translation>Hozzáad</translation>
     </message>
     <message>
         <source>Rename</source>
-        <translation type="unfinished">Átnevez</translation>
+        <translation>Átnevez</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished">Eszközök</translation>
+        <translation>Eszközök</translation>
     </message>
     <message>
         <source>Multi Screen</source>
-        <translation type="unfinished">Több képernyő</translation>
+        <translation>Több képernyő</translation>
     </message>
     <message>
         <source>Wide Size (16/9)</source>
-        <translation type="unfinished">Széles méret (16/9)</translation>
+        <translation>Széles méret (16/9)</translation>
     </message>
     <message>
         <source>Regular Size (4/3)</source>
-        <translation type="unfinished">Normál méret (4/3)</translation>
+        <translation>Normál méret (4/3)</translation>
     </message>
     <message>
         <source>Custom Size</source>
-        <translation type="unfinished">Egyedi méret</translation>
+        <translation>Egyedi méret</translation>
     </message>
     <message>
         <source>Stop Loading</source>
-        <translation type="unfinished">Betöltés megszakítása</translation>
+        <translation>Betöltés megszakítása</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation type="unfinished">Kivág</translation>
+        <translation>Kivág</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Másol</translation>
+        <translation>Másol</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation type="unfinished">Beilleszt</translation>
+        <translation>Beilleszt</translation>
     </message>
     <message>
         <source>Sleep</source>
-        <translation type="unfinished">Alvás</translation>
+        <translation>Alvás</translation>
     </message>
     <message>
         <source>Virtual Keyboard</source>
-        <translation type="unfinished">Virtuális billentyűzet</translation>
+        <translation>Virtuális billentyűzet</translation>
     </message>
     <message>
         <source>Plain Light Background</source>
@@ -349,19 +349,19 @@
     </message>
     <message>
         <source>Podcast</source>
-        <translation type="unfinished"></translation>
+        <translation>Podcast</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Felvétel</translation>
     </message>
     <message>
         <source>Start Screen Recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Képernyőfelvétel indítása</translation>
     </message>
     <message>
         <source>Erase Items</source>
-        <translation type="unfinished"></translation>
+        <translation>Elemek törlése</translation>
     </message>
     <message>
         <source>Erase Annotations</source>
@@ -373,43 +373,43 @@
     </message>
     <message>
         <source>Pen</source>
-        <translation type="unfinished"></translation>
+        <translation>Toll</translation>
     </message>
     <message>
         <source>Check Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Frissítések keresése</translation>
     </message>
     <message>
         <source>Ctrl+H</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+H</translation>
     </message>
     <message>
         <source>Eraser</source>
-        <translation type="unfinished"></translation>
+        <translation>Radír</translation>
     </message>
     <message>
         <source>Marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Kihúzó</translation>
     </message>
     <message>
         <source>Selector</source>
-        <translation type="unfinished"></translation>
+        <translation>Kijelölő</translation>
     </message>
     <message>
         <source>Hand</source>
-        <translation type="unfinished"></translation>
+        <translation>Kéz</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation type="unfinished"></translation>
+        <translation>Közelítés</translation>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation type="unfinished"></translation>
+        <translation>Távolítás</translation>
     </message>
     <message>
         <source>Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Vonal</translation>
     </message>
     <message>
         <source>Small Line</source>
