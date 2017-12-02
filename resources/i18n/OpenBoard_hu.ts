@@ -413,111 +413,111 @@
     </message>
     <message>
         <source>Small Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Vékony vonal</translation>
     </message>
     <message>
         <source>Medium Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Közepes vonal</translation>
     </message>
     <message>
         <source>Large Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Vastag vonal</translation>
     </message>
     <message>
         <source>Smalle Eraser</source>
-        <translation type="unfinished"></translation>
+        <translation>Vékony radír</translation>
     </message>
     <message>
         <source>Medium Eraser</source>
-        <translation type="unfinished"></translation>
+        <translation>Közepes radír</translation>
     </message>
     <message>
         <source>Large Eraser</source>
-        <translation type="unfinished"></translation>
+        <translation>Vastag radír</translation>
     </message>
     <message>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Szín</translation>
     </message>
     <message>
         <source>Reload Current Page</source>
-        <translation type="unfinished"></translation>
+        <translation>Oldal újratöltése</translation>
     </message>
     <message>
         <source>Load Home Page</source>
-        <translation type="unfinished"></translation>
+        <translation>Kezdőlap betöltése</translation>
     </message>
     <message>
         <source>Show Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Könyvjelzők</translation>
     </message>
     <message>
         <source>Add Bookmark</source>
-        <translation type="unfinished"></translation>
+        <translation>Új könyvjelző</translation>
     </message>
     <message>
         <source>Display Board</source>
-        <translation type="unfinished"></translation>
+        <translation>Táblát mutat</translation>
     </message>
     <message>
         <source>Erase Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Tartalom törlése</translation>
     </message>
     <message>
         <source>Display Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Tulajdonságok</translation>
     </message>
     <message>
         <source>Show Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Könyvtár</translation>
     </message>
     <message>
         <source>Show Computer Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>Asztalt mutat</translation>
     </message>
     <message>
         <source>Ctrl+Shift+H</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Shift+H</translation>
     </message>
     <message>
         <source>Create a New Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Új mappa</translation>
     </message>
     <message>
         <source>Create a New Document</source>
-        <translation type="unfinished"></translation>
+        <translation>Új dokumentum</translation>
     </message>
     <message>
         <source>Import a Document</source>
-        <translation type="unfinished"></translation>
+        <translation>Dokumentum importálása</translation>
     </message>
     <message>
         <source>Export a Document</source>
-        <translation type="unfinished"></translation>
+        <translation>Dokumentum exportálása</translation>
     </message>
     <message>
         <source>Open Page in Board</source>
-        <translation type="unfinished"></translation>
+        <translation>Oldal megniytása a táblán</translation>
     </message>
     <message>
         <source>Duplicate Selected Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Kiválasztott tartalom kettőzése</translation>
     </message>
     <message>
         <source>Delete Selected Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Kiválasztott tartalom törlése</translation>
     </message>
     <message>
         <source>Add Content to Document</source>
-        <translation type="unfinished"></translation>
+        <translation>Tartalom hozzáadása dokumentumhoz</translation>
     </message>
     <message>
         <source>Rename Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Tartalom átnevezése</translation>
     </message>
     <message>
         <source>Display Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Eszközök megjelenítése</translation>
     </message>
     <message>
         <source>Use Document Wide Size (16/9)</source>
